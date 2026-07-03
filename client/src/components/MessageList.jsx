@@ -10,24 +10,19 @@ function formatTime(value) {
 }
 
 export default function MessageList({ messages, username, onRead }) {
+
   const endRef = useRef(null);
-  const listRef = useRef(null);
+  const firstLoad = useRef(true);
+
 
   useEffect(() => {
-    const container = listRef.current;
 
-    const isNearBottom =
-      !container ||
-      container.scrollHeight -
-        container.scrollTop -
-        container.clientHeight <
-        100;
-
-    if (isNearBottom) {
-      endRef.current?.scrollIntoView({
-        behavior: 'smooth'
-      });
+    // only first time open chat -> go bottom
+    if (firstLoad.current) {
+      endRef.current?.scrollIntoView();
+      firstLoad.current = false;
     }
+
 
     const last = messages[messages.length - 1];
 
@@ -37,6 +32,7 @@ export default function MessageList({ messages, username, onRead }) {
 
   }, [messages, username, onRead]);
 
+
   if (!messages.length) {
     return (
       <section className="empty-state">
@@ -45,14 +41,14 @@ export default function MessageList({ messages, username, onRead }) {
     );
   }
 
+
   return (
-    <section
-      className="message-list"
-      aria-live="polite"
-      ref={listRef}
-    >
-      {messages.map((message) => {
-        const mine = message.username === username;
+    <section className="message-list">
+
+      {messages.map((message)=>{
+
+        const mine =
+          message.username === username;
 
         return (
           <article
@@ -61,9 +57,11 @@ export default function MessageList({ messages, username, onRead }) {
               mine ? 'mine' : 'theirs'
             }`}
           >
+
             <div className="message-bubble">
 
               <div className="message-meta">
+
                 <strong>
                   {mine ? 'You' : message.username}
                 </strong>
@@ -71,9 +69,11 @@ export default function MessageList({ messages, username, onRead }) {
                 <span>
                   {formatTime(message.createdAt)}
                 </span>
+
               </div>
 
               <p>{message.content}</p>
+
 
               {mine && (
                 <small className="message-status">
@@ -82,11 +82,15 @@ export default function MessageList({ messages, username, onRead }) {
               )}
 
             </div>
+
           </article>
         );
+
       })}
 
-      <div ref={endRef} />
+
+      <div ref={endRef}/>
+
     </section>
   );
 }

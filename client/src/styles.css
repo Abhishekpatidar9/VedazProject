@@ -80,9 +80,9 @@ button { cursor: pointer; border: 0; }
 }
 
 .chat-card {
-  min-height: calc(100vh - 48px);
+  height: calc(100vh - 48px);
   display: grid;
-  grid-template-rows: auto auto 1fr auto auto;
+  grid-template-rows: auto auto minmax(0,1fr) auto auto;
   overflow: hidden;
 }
 
@@ -108,8 +108,10 @@ button { cursor: pointer; border: 0; }
 .error-banner { background: #fee2e2; padding: 12px 24px; border-bottom: 1px solid #fecaca; }
 
 .message-list {
+  min-height: 0;
   overflow-y: auto;
   padding: 24px;
+  scroll-behavior: smooth;
 }
 .message-row { display: flex; margin-bottom: 14px; }
 .message-row.mine { justify-content: flex-end; }
